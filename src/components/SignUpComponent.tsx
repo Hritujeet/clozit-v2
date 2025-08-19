@@ -1,5 +1,6 @@
 "use client";
-import { authClient } from "@/components/auth-client";
+import { handleSignUp } from "@/actions/user.actions";
+import { authClient } from "@/lib/auth-client";
 import { signUpSchema } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -15,7 +16,6 @@ import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { handleSignUp } from "@/lib/auth/helpers";
 
 const SignUpComponent = () => {
     const queryClient = useQueryClient();

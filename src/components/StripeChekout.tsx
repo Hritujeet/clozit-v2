@@ -18,9 +18,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { createAuthClient } from "better-auth/react";
 import { City, State } from "country-state-city";
-import { CheckCircle, Loader2, MapPin, Package, Truck } from "lucide-react";
+import { ArrowRight, Loader2, MapPin, Package, Truck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import Checkout from "./Checkout";
@@ -37,7 +37,6 @@ const StripeCheckout = () => {
         register,
         control,
         handleSubmit,
-        reset,
         watch,
         formState: { errors, isSubmitting },
     } = useForm({
@@ -55,6 +54,10 @@ const StripeCheckout = () => {
     const [amountToPay, setAmountToPay] = useState(0);
     const [isCartLoaded, setIsCartLoaded] = useState(false);
     const [loadPaymentItem, setloadPaymentItem] = useState(false);
+    
+    // Add refs to prevent duplicate submissions
+    const isSubmittingRef = useRef(false);
+    const checkoutKey = useRef(Math.random().toString(36).substr(2, 9));
 
     const selectedState = watch("state");
     const states = State.getStatesOfCountry("IN");
@@ -80,26 +83,35 @@ const StripeCheckout = () => {
         setSubtotal(total);
         setAmountToPay(total + shipping);
         setIsCartLoaded(true);
-    }, [session, cart, router]);
+    }, [session, cart]);
 
     const onSubmit = (data: any) => {
-        if (!loadPaymentItem) {
-            localStorage.setItem(
-                "config",
-                JSON.stringify({
-                    ...data,
-                    amount: amountToPay,
-                })
-            );
+        if (isSubmittingRef.current || loadPaymentItem) {
+            return;
+        }
+        
+        isSubmittingRef.current = true;
+        
+        try {
+            const configData = {
+                ...data,
+                amount: amountToPay,
+                checkoutId: checkoutKey.current,
+            };
+            
+            localStorage.setItem("config", JSON.stringify(configData));
             setloadPaymentItem(true);
+        } catch (error) {
+            console.error("Error saving config:", error);
+            isSubmittingRef.current = false;
         }
     };
 
     if (!isCartLoaded || amountToPay === 0) {
         return (
-            <main className="flex flex-col justify-center items-center w-full h-64">
+            <main className="flex gap-2 justify-center items-center w-full h-64">
                 <h1 className="text-4xl font-bold text-primary">
-                    Loading Checkout Details
+                    Loading Checkout...
                 </h1>
                 <Loader2 className="w-10 h-10 animate-spin text-primary" />
             </main>
@@ -361,12 +373,14 @@ const StripeCheckout = () => {
                                             </div>
 
                                             <div className="my-2">
-                                                <Checkout
-                                                    amount={convertToSubcurrency(
-                                                        amountToPay
-                                                    )}
-                                                    mount={loadPaymentItem}
-                                                />
+                                                {loadPaymentItem && (
+                                                    <Checkout
+                                                        key={checkoutKey.current} // Force re-render with unique key
+                                                        amount={convertToSubcurrency(
+                                                            amountToPay
+                                                        )}
+                                                    />
+                                                )}
                                             </div>
 
                                             {/* Submit */}
@@ -374,9 +388,10 @@ const StripeCheckout = () => {
                                                 <Button
                                                     className="w-full"
                                                     size="lg"
-                                                    disabled={isSubmitting}
+                                                    disabled={isSubmitting || isSubmittingRef.current}
                                                 >
-                                                    Confirm <CheckCircle />
+                                                    Proceed to Pay{" "}
+                                                    <ArrowRight />
                                                 </Button>
                                             )}
                                         </form>

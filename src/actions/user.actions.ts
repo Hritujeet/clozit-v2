@@ -1,6 +1,6 @@
-import z from "zod";
-import { authClient } from "@/lib/auth-client"
+import { authClient } from "@/lib/auth-client";
 import { signInSchema, signUpSchema } from "@/lib/utils";
+import z from "zod";
 
 export const handleSignIn = async (data: z.infer<typeof signInSchema>) => {
     try {

@@ -15,7 +15,7 @@ import CartBar from "./CartBar";
 import SignOutButton from "./SignOutButton";
 import { buttonVariants } from "./ui/button";
 
-const handleSignOut = async () => {
+export const handleSignOut = async () => {
     "use server";
     try {
         const session = await auth.api.getSession({
