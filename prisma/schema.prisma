@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/client/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  PENDING
+  SHIPPING
+  OUT_FOR_DELIVERY
+  DELIVERED
+}
+
+enum Color {
+  BLACK
+  WHITE
+  RED
+  BLUE
+  GREEN
+  YELLOW
+  PINK
+  ORANGE
+  PURPLE
+}
+
+enum Size {
+  S
+  M
+  L
+  XL
+  XXL
+}
+
+enum Category {
+  T_SHIRTS
+  HOODIES
+  BOTTOMS
+  WINTER_WEAR
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  orders        Order[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model Verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String
+  image       String
+  variant     Json // stores colors + sizes array
+  /**
+   * variant: {
+   * colors: [Color]
+   * sizes: [Size]
+   * }
+   */
+  price       Float
+  category    Category
+  stock       Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  products      Json // JSON array of products
+  /**
+   * products: [
+   * {
+   * productId: String
+   * variant: {
+   * color: String
+   * size: String
+   * }
+   * quantity: Int
+   * }
+   * ]
+   */
+  fullname      String
+  phone         String
+  amount        Float
+  streetAddress String
+  city          String
+  state         String
+  status        Status   @default(PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
