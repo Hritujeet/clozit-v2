@@ -10,6 +10,7 @@ datasource db {
 
 enum Status {
   PENDING
+  ORDERED
   SHIPPING
   OUT_FOR_DELIVERY
   DELIVERED
