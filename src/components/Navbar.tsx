@@ -73,7 +73,7 @@ const Navbar = async () => {
                                 </li>
                                 <li>
                                     <Link
-                                        href={"/"}
+                                        href={"/orders"}
                                         className={buttonVariants({
                                             variant: "default",
                                             size: "sm",
@@ -146,7 +146,7 @@ const Navbar = async () => {
                                     {session && (
                                         <>
                                             <Link
-                                                href={"/profile"}
+                                                href={"/orders"}
                                                 className={buttonVariants({
                                                     variant: "default",
                                                     size: "sm",

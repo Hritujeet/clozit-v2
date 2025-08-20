@@ -4,26 +4,26 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cartType, checkoutSchema, convertToSubcurrency } from "@/lib/utils";
+import { cartType, checkoutSchema } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { loadStripe } from "@stripe/stripe-js";
 import { useMutation } from "@tanstack/react-query";
 import { createAuthClient } from "better-auth/react";
 import { City, State } from "country-state-city";
 import { ArrowRight, Loader2, MapPin, Package, Truck } from "lucide-react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { loadStripe } from "@stripe/stripe-js";
 import { useSelector } from "react-redux";
+import z from "zod";
 import {
     Select,
     SelectContent,
     SelectItem,
-    SelectValue,
     SelectTrigger,
+    SelectValue,
 } from "./ui/select";
 import { Separator } from "./ui/separator";
-import z from "zod";
 
 interface props {
     config: z.infer<typeof checkoutSchema>;
@@ -77,7 +77,7 @@ const Checkout = () => {
             const { url } = await a.json();
             const stripe = await stripePromise;
             if (stripe && url) {
-                window.location.href = url
+                window.location.href = url;
             }
         },
         onError: () => {
@@ -99,7 +99,7 @@ const Checkout = () => {
     useEffect(() => {
         if (session.isPending) return;
         if (!session.data) {
-            router.push("/auth/signin");
+            router.push("/auth/sign-in");
             return;
         }
 
@@ -113,9 +113,9 @@ const Checkout = () => {
         setIsCartLoaded(true);
     }, [session, cart, router]);
 
-    if (!isCartLoaded || amountToPay === 0) {
+    if (!isCartLoaded || amountToPay === 0 || session.isPending) {
         return (
-            <main className="flex gap-2 justify-center items-center w-full h-64">
+            <main className="flex gap-2 justify-center items-center w-full h-96">
                 <h1 className="text-4xl font-bold text-primary">
                     Loading Checkout...
                 </h1>
@@ -164,6 +164,8 @@ const Checkout = () => {
                                                     id="fullname"
                                                     type="text"
                                                     placeholder="John Doe"
+                                                    disabled={mutation.isPending}
+                                                    
                                                 />
                                                 {errors.fullName && (
                                                     <Alert
@@ -191,6 +193,8 @@ const Checkout = () => {
                                                     id="phone"
                                                     type="tel"
                                                     placeholder="+91 9056X XXXXX"
+                                                    disabled={mutation.isPending}
+                                                    
                                                 />
                                                 {errors.phone && (
                                                     <Alert
@@ -219,6 +223,8 @@ const Checkout = () => {
                                                 id="address"
                                                 type="text"
                                                 placeholder="12, Indra Vihar"
+                                                disabled={mutation.isPending}
+                                                
                                             />
                                             {errors.streetAddress && (
                                                 <Alert
@@ -243,6 +249,7 @@ const Checkout = () => {
                                                 <Label>State</Label>
                                                 <Controller
                                                     control={control}
+                                                    disabled={mutation.isPending}
                                                     name="state"
                                                     render={({ field }) => (
                                                         <Select
@@ -250,6 +257,7 @@ const Checkout = () => {
                                                                 field.onChange
                                                             }
                                                             value={field.value}
+                                                            
                                                         >
                                                             <SelectTrigger>
                                                                 <SelectValue placeholder="Select State" />
@@ -295,6 +303,7 @@ const Checkout = () => {
                                                 <Controller
                                                     control={control}
                                                     name="city"
+                                                    disabled={mutation.isPending}
                                                     render={({ field }) => (
                                                         <Select
                                                             onValueChange={
@@ -304,6 +313,7 @@ const Checkout = () => {
                                                             disabled={
                                                                 !selectedState
                                                             }
+                                                            
                                                         >
                                                             <SelectTrigger>
                                                                 <SelectValue placeholder="Select City" />
@@ -349,11 +359,9 @@ const Checkout = () => {
                                         {/* Submit */}
                                         <Button
                                             className="w-full"
-                                            size="lg"
-                                            disabled={isSubmitting}
+                                            disabled={mutation.isPending}
                                         >
-                                            {isSubmitting ||
-                                            mutation.isPending ? (
+                                            {mutation.isPending ? (
                                                 <>
                                                     Processing...{" "}
                                                     <Loader2 className="animate-spin" />

@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
         const { config, cart } = await req.json();
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
+            payment_method_types: ["card", "amazon_pay", "cashapp"],
             mode: "payment",
             metadata: {
                 ...config,
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
                     }
                 },
                 products: JSON.parse(JSON.stringify(cart)),
-                amount: session.amount_subtotal,
+                amount: session.amount_total/100,
                 stripePaymentId: session.id,
             }
         })
