@@ -1,9 +1,9 @@
-import StripeChekout from "@/components/StripeChekout";
+import Checkout from "@/components/Checkout";
 
 const Page = () => {
     return (
         <main suppressHydrationWarning>
-            <StripeChekout />
+            <Checkout />
         </main>
     );
 };
