@@ -118,7 +118,6 @@ model Order {
   id            String   @id @default(uuid())
   userId        String
   user          User     @relation(fields: [userId], references: [id])
-  paymentIntent String   @unique
   products      Json // JSON array of products
   /**
    * products: [
