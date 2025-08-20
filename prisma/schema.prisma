@@ -115,10 +115,10 @@ model Product {
 }
 
 model Order {
-  id            String   @id @default(uuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id])
-  products      Json // JSON array of products
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  products        Json // JSON array of products
   /**
    * products: [
    * {
@@ -131,13 +131,14 @@ model Order {
    * }
    * ]
    */
-  fullname      String
-  phone         String
-  amount        Float
-  streetAddress String
-  city          String
-  state         String
-  status        Status   @default(PENDING)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  fullname        String
+  stripePaymentId String   @unique
+  phone           String
+  amount          Float
+  streetAddress   String
+  city            String
+  state           String
+  status          Status   @default(PENDING)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

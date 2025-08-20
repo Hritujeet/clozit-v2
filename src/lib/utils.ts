@@ -70,8 +70,8 @@ export const checkoutSchema = z.object({
     fullName: z.string().min(6),
     phone: z.string().min(10).max(10),
     streetAddress: z.string().min(6),
-    city: z.string(),
-    state: z.string(),
+    city: z.string().min(1),
+    state: z.string().min(1),
 });
 
 export function cn(...inputs: ClassValue[]) {
