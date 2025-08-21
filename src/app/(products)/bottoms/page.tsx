@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import ProductGrid from "@/components/ProductGrid";
 import { Category } from '@/client/prisma';
+import {GridSkeleton} from "@/components/GridSkeleton";
 
 const Page = () => {
     return (
-        <div>
-            <ProductGrid title={"Shop Premium Bottoms"} category={Category.BOTTOMS} />
-        </div>
+        <Suspense
+            fallback={<GridSkeleton/>}>
+            <ProductGrid title={"Shop Stylish Bottoms"} category={Category.BOTTOMS}/>
+        </Suspense>
     );
 };
 

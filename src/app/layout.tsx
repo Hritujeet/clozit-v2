@@ -25,8 +25,7 @@ export default function RootLayout({
           <QueryProvider>
             <NextTopLoader
               showSpinner={false}
-              color="red"
-              height={2}
+              height={1.5}
               shadow={false}
             />
             <Navbar />
