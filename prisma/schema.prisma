@@ -101,12 +101,6 @@ model Product {
   description String
   image       String
   variant     Json // stores colors + sizes array
-  /**
-   * variant: {
-   * colors: [Color]
-   * sizes: [Size]
-   * }
-   */
   price       Float
   category    Category
   stock       Int      @default(1)
@@ -119,18 +113,6 @@ model Order {
   userId          String
   user            User     @relation(fields: [userId], references: [id])
   products        Json // JSON array of products
-  /**
-   * products: [
-   * {
-   * productId: String
-   * variant: {
-   * color: String
-   * size: String
-   * }
-   * quantity: Int
-   * }
-   * ]
-   */
   fullname        String
   stripePaymentId String   @unique
   phone           String

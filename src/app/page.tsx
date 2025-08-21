@@ -13,6 +13,7 @@ import {
 import { Truck, Sparkles, Shield, Heart, Loader2 } from "lucide-react";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import {GridSkeleton} from "@/components/GridSkeleton";
 
 const categories = [
   {
@@ -99,36 +100,6 @@ const perks = [
   },
 ];
 
-const GridSkeleton = ({ itemCount = 4, showAnimation = true }) => {
-  const skeletonItems = Array.from({ length: itemCount }, (_, index) => (
-    <div key={index} className="flex flex-col space-y-3">
-      <Skeleton className="aspect-video w-full rounded-xl" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-4/5" />
-      </div>
-    </div>
-  ));
-
-  return (
-    <div className="
-      container mx-auto 
-      py-8 px-4 sm:px-6 lg:px-8
-      max-w-7xl
-    ">
-      <div className="
-        grid gap-6 
-        grid-cols-1 
-        sm:grid-cols-2 
-        lg:grid-cols-3 
-        xl:grid-cols-4
-      ">
-        {skeletonItems}
-      </div>
-    </div>
-  );
-};
-
 export default async function Home() {
   return (
     <main className="min-h-screen">
@@ -184,7 +155,7 @@ export default async function Home() {
 
       {/* Product Grid Section */}
       <section className="py-16">
-        <Suspense fallback={<GridSkeleton />}>
+        <Suspense fallback={<GridSkeleton showFilters={false}/>}>
           <ProductGrid showFilters={false} title={"Trendy Outfits | Clozit"} />
         </Suspense>
       </section>

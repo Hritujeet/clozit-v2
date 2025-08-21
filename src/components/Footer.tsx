@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div>
             <div className="text-neutral-800">
-              <h1 className="text-2xl text-primary font-bold">Clozit</h1>
+              <h1 className="text-2xl tracking-tighter font-bold">Clozit</h1>
             </div>
             <ul className="mt-8 flex gap-2">
               <li>
