@@ -3,10 +3,10 @@ import ProductGrid from "@/components/ProductGrid";
 import {GridSkeleton} from "@/components/GridSkeleton";
 import {Category} from "@/client/prisma";
 
-const Page = () => {
+const Page = ({searchParams} : {searchParams: Promise<{ [key: string]: string | string[] | undefined }>}) => {
     return (
         <Suspense fallback={<GridSkeleton/>}>
-            <ProductGrid title={"Shop Exclusive Winter Collection"} category={Category.WINTER_WEAR}/>
+            <ProductGrid searchParams={searchParams} title={"Shop Exclusive Winter Collection"} category={Category.WINTER_WEAR}/>
         </Suspense>
     );
 };
