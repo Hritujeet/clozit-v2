@@ -60,7 +60,7 @@ async function page() {
                                         </p>
                                     </div>
                                     <Link
-                                        href={`orders/${order.id}`}
+                                        href={`/orders/${order.id}`}
                                         className={buttonVariants({variant: "outline", size: "sm"})}
                                     >
                                         View Details

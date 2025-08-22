@@ -9,11 +9,11 @@ import {Button, buttonVariants} from "./ui/button";
 import Link from "next/link";
 import {clearCart} from "@/lib/redux/cart/cartSlice";
 import {toast} from "sonner";
-import {cn} from "@/lib/utils";
+import {cartType, cn} from "@/lib/utils";
 import {Session} from "better-auth/types";
 
 const CartBar = ({session}: { session: Session }) => {
-    const cart = useSelector((state: any) => state.cart.items);
+    const cart = useSelector((state: { cart: {items: cartType} }) => state.cart.items);
     const dispatch = useDispatch();
     const [subtotal, setsubtotal] = useState(0);
     const [toggle, setToggle] = useState(false);

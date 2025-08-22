@@ -28,7 +28,7 @@ const handleSignOut = async () => {
             });
         }
         redirect("/auth/sign-in");
-    } catch (error: any) {
+    } catch (error) {
         console.error("Sign Out Error:", error);
         redirect("/auth/sign-in");
     }
