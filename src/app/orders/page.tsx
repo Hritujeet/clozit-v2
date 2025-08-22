@@ -19,7 +19,7 @@ async function page() {
     console.log(allOrders)
 
     if (allOrders.length <= 0) {
-        return <div className="h-64 flex flex-col justify-center items-center w-full gap-2">
+        return <div className="h-96 flex flex-col justify-center items-center w-full gap-2">
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-balance">
                 Looks Like you haven't placed any orders yet
             </h1>

@@ -17,19 +17,40 @@ const Order = async ({params}: { params: Promise<{ id: string }> }) => {
     if (!order) {
         return notFound();
     }
+
+    // Calculate delivery dates based on order creation date and daysToDeliver
+    const orderDate = new Date(order.createdAt);
+    const shippingDate = new Date(orderDate);
+    shippingDate.setDate(orderDate.getDate() + 1); // Next day for shipping
+
+    const outForDeliveryDate = new Date(orderDate);
+    outForDeliveryDate.setDate(orderDate.getDate() + (order.daysToDeliver - 1)); // Day before delivery
+
+    const deliveryDate = new Date(orderDate);
+    deliveryDate.setDate(orderDate.getDate() + order.daysToDeliver); // Final delivery date
+
     const trackingSteps = [
-        {step: "Order Placed", date: order?.createdAt || new Date(), completed: true},
+        {
+            step: "Order Placed",
+            date: order.createdAt,
+            completed: true
+        },
         {
             step: "Shipping",
-            date: null,
-            completed: order?.status === Status.SHIPPING || order?.status === Status.OUT_FOR_DELIVERY || order?.status === Status.DELIVERED
+            date: order.status === Status.SHIPPING || order.status === Status.OUT_FOR_DELIVERY || order.status === Status.DELIVERED ? shippingDate : null,
+            completed: order.status === Status.SHIPPING || order.status === Status.OUT_FOR_DELIVERY || order.status === Status.DELIVERED
         },
         {
             step: "Out for Delivery",
-            date: null,
-            completed: order?.status === Status.OUT_FOR_DELIVERY || order?.status === Status.DELIVERED
+            date: order.status === Status.OUT_FOR_DELIVERY || order.status === Status.DELIVERED ? outForDeliveryDate : null,
+            completed: order.status === Status.OUT_FOR_DELIVERY || order.status === Status.DELIVERED
         },
-        {step: "Delivered", date: null, completed: order?.status === Status.DELIVERED}
+        {
+            step: "Delivered",
+            date: order.status === Status.DELIVERED ? deliveryDate : null,
+            completed: order.status === Status.DELIVERED,
+            expectedDate: order.status !== Status.DELIVERED ? deliveryDate : null // Show expected date if not delivered
+        }
     ];
 
     return (
@@ -54,9 +75,22 @@ const Order = async ({params}: { params: Promise<{ id: string }> }) => {
                                 <CardTitle className="text-lg">Order Summary</CardTitle>
                             </CardHeader>
                             <CardContent className="pt-0">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-sm text-muted-foreground">Total Amount</span>
-                                    <span className="font-semibold text-lg">${order?.amount}</span>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm text-muted-foreground">Total Amount</span>
+                                        <span className="font-semibold text-lg">${order?.amount}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm text-muted-foreground">Expected Delivery</span>
+                                        <span className="font-medium text-sm text-green-600">
+                                            {deliveryDate.toLocaleDateString('en-US', {
+                                                weekday: 'short',
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric'
+                                            })}
+                                        </span>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
@@ -104,8 +138,26 @@ const Order = async ({params}: { params: Promise<{ id: string }> }) => {
                                     {order?.status || 'Processing'}
                                 </Badge>
 
+                                {/* Delivery Timeline Info */}
+                                {order.status !== Status.DELIVERED && (
+                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-medium text-blue-800">Expected Delivery:</span>
+                                            <span className="text-sm font-bold text-blue-900">
+                                                {deliveryDate.toLocaleDateString('en-US', {
+                                                    month: 'short',
+                                                    day: 'numeric'
+                                                })}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-blue-600 mt-1">
+                                            {order.daysToDeliver} days from order date
+                                        </p>
+                                    </div>
+                                )}
+
                                 {/* Tracking Timeline */}
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                     {trackingSteps.map((step, index) => (
                                         <div key={index} className="flex items-start space-x-3">
                                             <div className={`flex-shrink-0 w-3 h-3 rounded-full border-2 mt-1.5 ${
@@ -127,7 +179,19 @@ const Order = async ({params}: { params: Promise<{ id: string }> }) => {
                                                 </p>
                                                 {step.date && (
                                                     <p className="text-xs text-gray-500 mt-1">
-                                                        {new Date(step.date).toLocaleDateString()}
+                                                        {new Date(step.date).toLocaleDateString('en-US', {
+                                                            weekday: 'short',
+                                                            month: 'short',
+                                                            day: 'numeric'
+                                                        })}
+                                                    </p>
+                                                )}
+                                                {step.expectedDate && !step.completed && (
+                                                    <p className="text-xs text-blue-600 mt-1 font-medium">
+                                                        Expected: {step.expectedDate.toLocaleDateString('en-US', {
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    })}
                                                     </p>
                                                 )}
                                             </div>

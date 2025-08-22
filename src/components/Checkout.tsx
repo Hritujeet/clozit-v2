@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cartType, checkoutSchema } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loadStripe } from "@stripe/stripe-js";
@@ -31,6 +32,120 @@ interface props {
 }
 
 const { useSession } = createAuthClient();
+
+const CheckoutSkeleton = () => {
+    return (
+        <main className="flex justify-center items-center w-full px-8 sm:px-12 md:px-16 lg:px-20 xl:px-32 min-h-[60vh]">
+            <div className="min-h-screen py-8 w-full">
+                <div className="container mx-auto px-4 max-w-7xl">
+                    <div className="text-center mb-8">
+                        <Skeleton className="h-10 w-48 mx-auto mb-2" />
+                        <Skeleton className="h-4 w-80 mx-auto" />
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Checkout Form Skeleton */}
+                        <div className="lg:col-span-2 space-y-6">
+                            <Card className="shadow-sm border-0 bg-white/70 backdrop-blur-sm">
+                                <CardHeader className="pb-4">
+                                    <div className="flex items-center gap-2">
+                                        <Skeleton className="h-5 w-5" />
+                                        <Skeleton className="h-6 w-32" />
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {/* Full Name + Phone */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-20" />
+                                            <Skeleton className="h-10 w-full" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-24" />
+                                            <Skeleton className="h-10 w-full" />
+                                        </div>
+                                    </div>
+
+                                    {/* Street Address */}
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-28" />
+                                        <Skeleton className="h-10 w-full" />
+                                    </div>
+
+                                    {/* State + City */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-16" />
+                                            <Skeleton className="h-10 w-full" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-12" />
+                                            <Skeleton className="h-10 w-full" />
+                                        </div>
+                                    </div>
+
+                                    {/* Submit Button */}
+                                    <Skeleton className="h-10 w-full" />
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* Order Summary Skeleton */}
+                        <div className="lg:col-span-1">
+                            <Card className="shadow-lg border-0 bg-white/70 backdrop-blur-sm sticky top-6">
+                                <CardHeader className="pb-4">
+                                    <div className="flex items-center gap-2">
+                                        <Skeleton className="h-5 w-5" />
+                                        <Skeleton className="h-6 w-32" />
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="space-y-3">
+                                        {[1, 2, 3].map((index) => (
+                                            <div
+                                                key={index}
+                                                className="flex items-center gap-3 p-3 rounded-lg bg-muted/30"
+                                            >
+                                                <div className="flex-1 min-w-0 space-y-2">
+                                                    <Skeleton className="h-4 w-full" />
+                                                    <Skeleton className="h-3 w-16" />
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Skeleton className="h-4 w-6" />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <Separator />
+
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between">
+                                            <Skeleton className="h-4 w-16" />
+                                            <Skeleton className="h-4 w-12" />
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <div className="flex items-center gap-1">
+                                                <Skeleton className="h-3 w-3" />
+                                                <Skeleton className="h-4 w-16" />
+                                            </div>
+                                            <Skeleton className="h-4 w-12" />
+                                        </div>
+                                        <Separator />
+                                        <div className="flex justify-between">
+                                            <Skeleton className="h-5 w-10" />
+                                            <Skeleton className="h-5 w-16" />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    );
+};
 
 const Checkout = () => {
     const {
@@ -114,14 +229,7 @@ const Checkout = () => {
     }, [session, cart, router]);
 
     if (!isCartLoaded || amountToPay === 0 || session.isPending) {
-        return (
-            <main className="flex gap-2 justify-center items-center w-full h-96">
-                <h1 className="text-4xl font-bold text-primary">
-                    Loading Checkout...
-                </h1>
-                <Loader2 className="w-10 h-10 animate-spin text-primary" />
-            </main>
-        );
+        return <CheckoutSkeleton />;
     }
 
     return (
@@ -165,7 +273,7 @@ const Checkout = () => {
                                                     type="text"
                                                     placeholder="John Doe"
                                                     disabled={mutation.isPending}
-                                                    
+
                                                 />
                                                 {errors.fullName && (
                                                     <Alert
@@ -194,7 +302,7 @@ const Checkout = () => {
                                                     type="tel"
                                                     placeholder="+91 9056X XXXXX"
                                                     disabled={mutation.isPending}
-                                                    
+
                                                 />
                                                 {errors.phone && (
                                                     <Alert
@@ -224,7 +332,7 @@ const Checkout = () => {
                                                 type="text"
                                                 placeholder="12, Indra Vihar"
                                                 disabled={mutation.isPending}
-                                                
+
                                             />
                                             {errors.streetAddress && (
                                                 <Alert
@@ -257,7 +365,7 @@ const Checkout = () => {
                                                                 field.onChange
                                                             }
                                                             value={field.value}
-                                                            
+
                                                         >
                                                             <SelectTrigger>
                                                                 <SelectValue placeholder="Select State" />
@@ -313,7 +421,7 @@ const Checkout = () => {
                                                             disabled={
                                                                 !selectedState
                                                             }
-                                                            
+
                                                         >
                                                             <SelectTrigger>
                                                                 <SelectValue placeholder="Select City" />
@@ -405,7 +513,7 @@ const Checkout = () => {
                                                             $
                                                             {cart[
                                                                 item
-                                                            ].price.toFixed(
+                                                                ].price.toFixed(
                                                                 2
                                                             )}{" "}
                                                             each

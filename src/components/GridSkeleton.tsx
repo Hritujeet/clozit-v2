@@ -11,7 +11,7 @@ interface GridSkeletonProps {
 
 export const GridSkeleton = ({
                                  title = "Loading Products...",
-                                 showFilters = true,
+                                 showFilters = false,
                                  itemCount = 12,
                                  showAnimation = true,
                                  className

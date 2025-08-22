@@ -121,6 +121,7 @@ model Order {
   city            String
   state           String
   status          Status   @default(PENDING)
+  daysToDeliver   Int      @default(3)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
