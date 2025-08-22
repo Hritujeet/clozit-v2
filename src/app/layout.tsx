@@ -25,8 +25,9 @@ export default function RootLayout({
             <QueryProvider>
                 <NextTopLoader
                     showSpinner={false}
-                    height={1.5}
+                    height={2}
                     shadow={false}
+                    color="green"
                 />
                 <Navbar/>
                 <Toaster position={"bottom-left"}/>

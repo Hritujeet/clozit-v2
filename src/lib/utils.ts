@@ -74,6 +74,13 @@ export const checkoutSchema = z.object({
     state: z.string().min(1),
 });
 
+export const contactSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    phone: z.string().min(10, "Phone number must be at least 10 digits"),
+    message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
