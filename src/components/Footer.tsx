@@ -12,8 +12,7 @@ const Footer = () => {
             </div>
             <ul className="mt-8 flex gap-2">
               <li>
-                <a
-                  href="#"
+                <a href="https://www.instagram.com/hritujeet?igsh=MWcyMmIzM21tZGlseA=="
                   rel="noreferrer"
                   target="_blank"
                   className="text-muted-foreground transition hover:text-primary"
@@ -37,7 +36,7 @@ const Footer = () => {
 
               <li>
                 <a
-                  href="#"
+                  href="https://x.com/HritujeetS93526?t=XUuqXHaElaXDj1XYluk2VA&s=09"
                   rel="noreferrer"
                   target="_blank"
                   className="text-muted-foreground transition hover:text-primary"
@@ -57,7 +56,7 @@ const Footer = () => {
 
               <li>
                 <a
-                  href="#"
+                  href="https://www.github.com/Hritujeet"
                   rel="noreferrer"
                   target="_blank"
                   className="text-muted-foreground transition hover:text-primary"
