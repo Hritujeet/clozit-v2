@@ -14,7 +14,10 @@ async function page() {
     const allOrders = await db.order.findMany({
         where: {
             userId: id
-        }
+        },
+        orderBy: {
+            createdAt: "desc"
+       }
     })
 
     if (allOrders.length <= 0) {
