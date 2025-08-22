@@ -1,28 +1,20 @@
 "use client";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-    Sheet,
-    SheetContent,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
-import { Loader2, ShoppingBag, ShoppingCart } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger,} from "@/components/ui/sheet";
+import {ShoppingBag, ShoppingCart} from "lucide-react";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import CartItem from "./CartItem";
-import { Button, buttonVariants } from "./ui/button";
-import { authClient } from "@/lib/auth-client";
+import {Button, buttonVariants} from "./ui/button";
 import Link from "next/link";
-import { clearCart } from "@/lib/redux/cart/cartSlice";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import {clearCart} from "@/lib/redux/cart/cartSlice";
+import {toast} from "sonner";
+import {cn} from "@/lib/utils";
+import {Session} from "better-auth/types";
 
-const CartBar = () => {
+const CartBar = ({session}: { session: Session }) => {
     const cart = useSelector((state: any) => state.cart.items);
     const dispatch = useDispatch();
-    const session = authClient.useSession();
     const [subtotal, setsubtotal] = useState(0);
     const [toggle, setToggle] = useState(false);
     const [checkoutRedirect, setCheckoutRedirect] = useState("");
@@ -36,9 +28,7 @@ const CartBar = () => {
     };
 
     const manageCheckout = () => {
-        if (session.isPending) return;
-
-        if (session.data?.user) {
+        if (session) {
             setCheckoutRedirect("/checkout");
         } else {
             setCheckoutRedirect("/auth/sign-in");
@@ -48,19 +38,19 @@ const CartBar = () => {
     useEffect(() => {
         calculateSubtotal();
         manageCheckout();
-    }, [cart, session.isPending]);
+    }, [cart, session]);
 
     return (
         <Sheet open={toggle} onOpenChange={setToggle}>
             <SheetTrigger
-                className={buttonVariants({ variant: "outline", size: "icon" })}
+                className={buttonVariants({variant: "outline", size: "icon"})}
             >
-                <ShoppingCart className="text-primary" />
+                <ShoppingCart className="text-primary"/>
             </SheetTrigger>
             <SheetContent className="w-full">
                 <SheetHeader>
                     <SheetTitle className="flex gap-2">
-                        <ShoppingBag className="text-primary" /> Cart
+                        <ShoppingBag className="text-primary"/> Cart
                     </SheetTitle>
                 </SheetHeader>
                 <ScrollArea className="flex flex-col px-4 h-[calc(100vh-15rem)]">
@@ -101,24 +91,18 @@ const CartBar = () => {
                         >
                             Clear Cart
                         </Button>
-                        {session.isPending ? (
-                            <Button disabled>
-                                <Loader2 className="animate-spin" /> Loading...
-                            </Button>
-                        ) : (
-                            <Link
-                                className={cn(
-                                    buttonVariants({
-                                        variant: "default",
-                                    }),
-                                    Object.keys(cart).length <= 0 && "pointer-events-none opacity-75"
-                                )}
-                                href={checkoutRedirect}
-                                onClick={() => setToggle(false)}
-                            >
-                                Checkout
-                            </Link>
-                        )}
+                        <Link
+                            className={cn(
+                                buttonVariants({
+                                    variant: "default",
+                                }),
+                                Object.keys(cart).length <= 0 && "pointer-events-none opacity-75"
+                            )}
+                            href={checkoutRedirect}
+                            onClick={() => setToggle(false)}
+                        >
+                            Checkout
+                        </Link>
                     </div>
                 </SheetFooter>
             </SheetContent>

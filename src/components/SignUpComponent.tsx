@@ -42,7 +42,7 @@ const SignUpComponent = () => {
             reset();
             setTimeout(() => {
                 router.push("/auth/sign-in");
-            }, 1000);
+            }, 500);
         },
         onError: () => {
             toast.error("Email Already Registered.", { duration: 2000 });

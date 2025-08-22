@@ -29,7 +29,7 @@ export default function RootLayout({
                     shadow={false}
                 />
                 <Navbar/>
-                <Toaster/>
+                <Toaster position={"bottom-left"}/>
                 {children}
                 <Footer></Footer>
             </QueryProvider>

@@ -42,7 +42,7 @@ const SignInComponent = () => {
             reset();
             setTimeout(() => {
                 window.location.href = "/";
-            }, 1000);
+            }, 500);
         },
         onError: () => {
             toast.error("Invalid Credentials!", {

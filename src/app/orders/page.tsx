@@ -16,7 +16,6 @@ async function page() {
             userId: id
         }
     })
-    console.log(allOrders)
 
     if (allOrders.length <= 0) {
         return <div className="h-96 flex flex-col justify-center items-center w-full gap-2">

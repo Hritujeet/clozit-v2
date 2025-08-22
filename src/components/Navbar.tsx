@@ -97,7 +97,7 @@ const Navbar = async () => {
                             </li>
                         )}
                     </ul>
-                    <CartBar />
+                    <CartBar session={session?.session}/>
                     <div className="block min-[700px]:hidden">
                         <Sheet>
                             <SheetTrigger
