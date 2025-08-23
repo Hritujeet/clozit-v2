@@ -8,13 +8,21 @@ export async function GET(
     const { slug } = await params;
     const product = await db.product.findUnique({
         where: {
-            slug: slug
-        }
-    })
+            slug: slug,
+        },
+    });
 
     if (!product) {
-        throw new Error("Product was not found")
+        return NextResponse.json(
+            {
+                message: "The product was not found",
+            },
+            { status: 404 }
+        );
     }
 
-    return NextResponse.json({message: "This is fetch a single product", data: product})
+    return NextResponse.json({
+        message: "This is fetch a single product",
+        data: product,
+    });
 }
