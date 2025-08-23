@@ -211,7 +211,7 @@ const Page = () => {
                         </Link>
                         <Link 
                             href="/contact" 
-                            className={buttonVariants({ variant: "outline", size: "lg" }) + " text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-slate-900"}
+                            className={buttonVariants({ variant: "outline", size: "lg" })}
                         >
                             Get in Touch
                         </Link>
