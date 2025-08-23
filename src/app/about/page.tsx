@@ -205,13 +205,13 @@ const Page = () => {
                     <div className="flex flex-col sm:flex-row gap-6 justify-center">
                         <Link 
                             href="/" 
-                            className={buttonVariants({ variant: "default", size: "lg" }) + " text-lg px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"}
+                            className={buttonVariants({ variant: "default", size: "lg" })}
                         >
                             Shop Collection
                         </Link>
                         <Link 
                             href="/contact" 
-                            className={buttonVariants({ variant: "outline", size: "lg" })}
+                            className={buttonVariants({ variant: "default", size: "lg" })}
                         >
                             Get in Touch
                         </Link>
