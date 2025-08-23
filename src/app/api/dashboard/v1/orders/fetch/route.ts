@@ -1,5 +1,14 @@
+import { db } from "@/utils/db/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-    return NextResponse.json("This is fetch orders")
+    const allOrders = await db.order.findMany({
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+    return NextResponse.json({
+        message: "Welcome to Clozit Dashboard",
+        data: allOrders,
+    });
 }
