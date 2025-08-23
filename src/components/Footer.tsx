@@ -87,7 +87,7 @@ const Footer = () => {
               <ul className="mt-6 space-y-2 text-sm">
                 <li>
                   <Link
-                    href="/products/t-shirts"
+                    href="/t-shirts"
                     className="text-muted-foreground transition hover:text-primary"
                   >
                     T Shirts
@@ -96,7 +96,7 @@ const Footer = () => {
 
                 <li>
                   <Link
-                    href="/products/hoodies"
+                    href="/hoodies"
                     className="text-muted-foreground transition hover:text-primary"
                   >
                     Hoodies
@@ -105,7 +105,7 @@ const Footer = () => {
 
                 <li>
                   <Link
-                    href="/products/bottoms"
+                    href="/bottoms"
                     className="text-muted-foreground transition hover:text-primary"
                   >
                     Bottoms
@@ -114,7 +114,7 @@ const Footer = () => {
 
                 <li>
                   <Link
-                    href="/products/winter-wear"
+                    href="/winter-wear"
                     className="text-muted-foreground transition hover:text-primary"
                   >
                     Winter Wear
