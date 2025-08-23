@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   // Extract the admin header
-  const adminHeader = req.headers.get("admin");
+  const adminHeader = req.headers.get("admin");  
 
   // Validate the header
   if (adminHeader !== process.env.ADMIN) {
@@ -19,5 +19,5 @@ export function middleware(req: NextRequest) {
 
 // Apply middleware only to API routes
 export const config = {
-  matcher: "/api/dashboard/v1/:path*",
+  matcher: "/api/dashboard/v1/:path*"
 };
