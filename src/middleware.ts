@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const allowedOrigins = ["https://clozit.vercel.app/api/dashboard/v1/"];
+const allowedOrigins = ["https://clozit.vercel.app/", "http://localhost:5173/",];
 
 const corsOptions = {
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -48,5 +48,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: "/api/dashboard/vi/:path*",
+    matcher: "/api/dashboard/v1/:path*",
 };
