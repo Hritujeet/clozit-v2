@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
     const response = NextResponse.next();
     response.headers.set('Access-Control-Allow-Origin', 'http://localhost:5173');
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Admin');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Admin, admin');
     response.headers.set('Access-Control-Max-Age', '86400'); // Cache preflight response for 24 hours
 
     // 2. Handle the CORS preflight request
