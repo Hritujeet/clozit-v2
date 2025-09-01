@@ -76,8 +76,6 @@
   --sidebar-ring: oklch(0.527 0.154 150.069);
 }
 
-
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -153,5 +151,14 @@
   .btn:active {
     @apply bg-blue-700;
     filter: brightness(0.9);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
