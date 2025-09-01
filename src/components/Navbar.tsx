@@ -38,7 +38,6 @@ const Navbar = async () => {
     const session = await auth.api.getSession({
         headers: await headers(),
     });
-
     return (
         <header className="sticky top-0 z-50">
             <nav className="flex justify-between items-center px-6 sm:px-10 py-2 sm:py-3 border-b w-full bg-white/80 backdrop-blur-lg">
@@ -82,6 +81,19 @@ const Navbar = async () => {
                                         Orders
                                     </Link>
                                 </li>
+                                {session.user?.email === process.env.ADMIN && (
+                                    <li>
+                                        <Link
+                                            href={"/dashboard"}
+                                            className={buttonVariants({
+                                                variant: "outline",
+                                                size: "sm",
+                                            })}
+                                        >
+                                            Admin
+                                        </Link>
+                                    </li>
+                                )}
                             </>
                         ) : (
                             <li>
@@ -97,7 +109,7 @@ const Navbar = async () => {
                             </li>
                         )}
                     </ul>
-                    <CartBar session={session?.session}/>
+                    <CartBar session={session?.session} />
                     <div className="block min-[700px]:hidden">
                         <Sheet>
                             <SheetTrigger
@@ -158,6 +170,23 @@ const Navbar = async () => {
                                             <form action={handleSignOut}>
                                                 <SignOutButton />
                                             </form>
+                                            {session.user?.email ===
+                                                process.env.ADMIN && (
+                                                <li>
+                                                    <Link
+                                                        href={"/dashboard"}
+                                                        className={buttonVariants(
+                                                            {
+                                                                variant:
+                                                                    "outline",
+                                                                size: "sm",
+                                                            }
+                                                        )}
+                                                    >
+                                                        Admin
+                                                    </Link>
+                                                </li>
+                                            )}
                                         </>
                                     )}
                                 </SheetFooter>
