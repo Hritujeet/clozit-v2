@@ -1,52 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-const allowedOrigins = ["https://clozit.vercel.app/", "http://localhost:5173/",];
+export function middleware(req: NextRequest) {
+  // Extract the admin header
+  const adminHeader = req.headers.get("admin");  
 
-const corsOptions = {
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization, admin, Admin",
-};
+  // Validate the header
+  if (adminHeader !== process.env.ADMIN) {
+    return new NextResponse(
+      JSON.stringify({ error: "Unauthorized access" }),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
-export function middleware(request: NextRequest) {
-    // Check the origin from the request
-    const origin = request.headers.get("origin") ?? "";
-    const isAllowedOrigin = allowedOrigins.includes(origin);
-
-    // Handle preflighted requests
-    const isPreflight = request.method === "OPTIONS";
-
-    if (isPreflight) {
-        const preflightHeaders = {
-            ...(isAllowedOrigin && { "Access-Control-Allow-Origin": origin }),
-            ...corsOptions,
-        };
-        return NextResponse.json({}, { headers: preflightHeaders });
-    }
-
-    // Handle simple requests
-    const response = NextResponse.next();
-
-    if (isAllowedOrigin) {
-        response.headers.set("Access-Control-Allow-Origin", origin);
-    }
-
-    Object.entries(corsOptions).forEach(([key, value]) => {
-        response.headers.set(key, value);
-    });
-
-    const adminHeader = request.headers.get("admin");
-
-    // Validate the header
-    if (adminHeader !== process.env.ADMIN) {
-        return new NextResponse(
-            JSON.stringify({ error: "Unauthorized access" }),
-            { status: 401, headers: { "Content-Type": "application/json" } }
-        );
-    }
-
-    return response;
+  // Allow the request to proceed
+  return NextResponse.next();
 }
 
+// Apply middleware only to API routes
 export const config = {
-    matcher: "/api/dashboard/v1/:path*",
+  matcher: "/api/dashboard/v1/:path*"
 };
