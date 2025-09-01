@@ -172,20 +172,15 @@ const Navbar = async () => {
                                             </form>
                                             {session.user?.email ===
                                                 process.env.ADMIN && (
-                                                <li>
-                                                    <Link
-                                                        href={"/dashboard"}
-                                                        className={buttonVariants(
-                                                            {
-                                                                variant:
-                                                                    "outline",
-                                                                size: "sm",
-                                                            }
-                                                        )}
-                                                    >
-                                                        Admin
-                                                    </Link>
-                                                </li>
+                                                <Link
+                                                    href={"/dashboard"}
+                                                    className={buttonVariants({
+                                                        variant: "outline",
+                                                        size: "sm",
+                                                    })}
+                                                >
+                                                    Admin
+                                                </Link>
                                             )}
                                         </>
                                     )}
