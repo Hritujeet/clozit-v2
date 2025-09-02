@@ -6,6 +6,9 @@ export async function GET(request: NextRequest) {
         orderBy: {
             createdAt: "desc",
         },
+        include: {
+            user: true,
+        }
     });
     return NextResponse.json({
         message: "Welcome to Clozit Dashboard",
