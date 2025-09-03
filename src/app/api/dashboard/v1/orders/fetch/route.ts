@@ -1,3 +1,4 @@
+import { Status } from "@/client/prisma";
 import { db } from "@/utils/db/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -6,9 +7,13 @@ export async function GET(request: NextRequest) {
         orderBy: {
             createdAt: "desc",
         },
-        include: {
-            user: true,
-        }
+        where: {
+            OR: [
+                { status: Status.ORDERED },
+                { status: Status.SHIPPING },
+                { status: Status.OUT_FOR_DELIVERY },
+            ],
+        },
     });
     return NextResponse.json({
         message: "Welcome to Clozit Dashboard",
