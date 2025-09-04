@@ -1,5 +1,5 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Table,
     TableBody,
@@ -9,14 +9,16 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { use } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Product } from "@/client/prisma";
 import { PlusIcon } from "lucide-react";
+import { toast } from "sonner";
 
 const products = () => {
+    const queryClient = useQueryClient();
     const query = useQuery({
         queryFn: async () => {
             const response = await fetch("/api/dashboard/v1/products/fetch");
@@ -24,6 +26,24 @@ const products = () => {
             return data;
         },
         queryKey: ["products"],
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: async (id: string) => {
+            const res = await fetch(`/api/dashboard/v1/products/delete`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json", id: id },
+            });
+            if (!res.ok) throw new Error("Failed to delete product");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+            toast.success("Product deleted successfully");
+        },
+        onError: () => {
+            toast.error("Failed to delete product");
+        },
     });
 
     if (query.isPending) {
@@ -79,7 +99,10 @@ const products = () => {
         <div className="container mx-auto mt-10">
             <div className="flex justify-between w-full">
                 <h1 className="text-2xl font-bold mb-4">Products</h1>
-                <Link href="/dashboard/products/addProduct" className={buttonVariants({variant: "default"})}>
+                <Link
+                    href="/dashboard/products/addProduct"
+                    className={buttonVariants({ variant: "default" })}
+                >
                     Add New Product <PlusIcon />
                 </Link>
             </div>
@@ -111,8 +134,15 @@ const products = () => {
                                 >
                                     View Product
                                 </Link>
-                                <Button variant="outline">
-                                    Update Product
+                                <Button
+                                    variant="destructive"
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                        deleteMutation.mutate(product.id);
+                                    }}
+                                    disabled={deleteMutation.isPending}
+                                >
+                                    Delete
                                 </Button>
                             </TableCell>
                         </TableRow>
