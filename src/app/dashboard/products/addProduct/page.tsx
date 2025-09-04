@@ -207,7 +207,7 @@ const AddProduct: React.FC = () => {
     const availableSizes = ["S", "M", "L", "XL", "XXL"];
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
+        <div className="flex justify-center items-center min-h-screen">
             <Card className="w-full max-w-2xl p-8 shadow-lg">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <h2 className="text-2xl font-bold mb-6 text-center">
@@ -425,19 +425,6 @@ const AddProduct: React.FC = () => {
                             "Add Product"
                         )}
                     </Button>
-
-                    {mutation.isSuccess && (
-                        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
-                            Product added successfully!
-                        </div>
-                    )}
-
-                    {mutation.isError && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                            Error:{" "}
-                            {mutation.error?.message || "Failed to add product"}
-                        </div>
-                    )}
                 </form>
             </Card>
         </div>
