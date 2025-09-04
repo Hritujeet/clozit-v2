@@ -46,7 +46,7 @@ const Loading = () => {
                     </div>
 
                     {/* Bottom section with price and cart actions */}
-                    <div className="flex justify-center sm:justify-between items-center fixed bottom-0 left-0 w-full px-8 py-4 bg-white border-t sm:relative sm:bottom-auto sm:left-auto sm:px-0 sm:py-0 sm:border-none">
+                    <div className="flex justify-center sm:justify-between items-center fixed bottom-0 left-0 w-full px-8 py-4 border-t sm:relative sm:bottom-auto sm:left-auto sm:px-0 sm:py-0 sm:border-none">
                         <Skeleton className="h-8 w-24 hidden sm:block" />
                         <div className="flex gap-2">
                             <Skeleton className="h-10 w-32 rounded-md" />

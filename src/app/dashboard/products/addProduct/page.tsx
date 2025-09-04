@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import z from "zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { Select, SelectItem } from "@/components/ui/select";
 
 const ColorEnum = z.enum([
     "BLACK",
@@ -304,7 +305,7 @@ const AddProduct: React.FC = () => {
                                     className={`px-3 py-1 text-sm rounded border transition-colors ${
                                         form.colors.includes(color)
                                             ? "bg-blue-500 text-white border-blue-500"
-                                            : "bg-white text-gray-700 border-gray-300 hover:border-blue-300"
+                                            : "bg-muted text-muted-foreground"
                                     }`}
                                 >
                                     {color}
@@ -332,7 +333,7 @@ const AddProduct: React.FC = () => {
                                     className={`px-3 py-1 text-sm rounded border transition-colors ${
                                         form.sizes.includes(size)
                                             ? "bg-blue-500 text-white border-blue-500"
-                                            : "bg-white text-gray-700 border-gray-300 hover:border-blue-300"
+                                            : "bg-muted text-muted-foreground"
                                     }`}
                                 >
                                     {size}
@@ -376,19 +377,22 @@ const AddProduct: React.FC = () => {
                                 name="category"
                                 value={form.category}
                                 onChange={handleInputChange}
-                                className={`w-full border rounded-md px-3 py-2 text-sm ${
+                                className={`flex h-10 w-full rounded-md border border-input bg-muted px-4 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
                                     errors.category
-                                        ? "border-red-500"
-                                        : "border-gray-300"
+                                        ? "border-destructive focus-visible:ring-destructive"
+                                        : ""
                                 }`}
                             >
+                                <option value="" disabled>
+                                    Select a category
+                                </option>
                                 <option value="T_SHIRTS">T-Shirts</option>
                                 <option value="HOODIES">Hoodies</option>
                                 <option value="BOTTOMS">Bottoms</option>
                                 <option value="WINTER_WEAR">Winter Wear</option>
                             </select>
                             {errors.category && (
-                                <p className="text-red-500 text-sm mt-1">
+                                <p className="text-sm font-medium text-destructive">
                                     {errors.category}
                                 </p>
                             )}

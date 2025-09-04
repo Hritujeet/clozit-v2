@@ -1,11 +1,12 @@
-import type {Metadata} from "next";
+import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import NextTopLoader from "nextjs-toploader";
 import Footer from "@/components/Footer";
 import QueryProvider from "@/lib/Providers/QueryProvider";
-import {Toaster} from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import StoreProvider from "@/lib/Providers/StoreProvider";
+import { ThemeProvider } from "@/lib/Providers/theme-provider";
 
 export const metadata: Metadata = {
     title: "Clozit | Elevate Your Style, Define Your Story",
@@ -14,28 +15,33 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-        <body>
-        <StoreProvider>
-            <QueryProvider>
-                <NextTopLoader
-                    showSpinner={false}
-                    height={2}
-                    shadow={false}
-                    color="green"
-                />
-                <Navbar/>
-                <Toaster position={"bottom-left"}/>
-                {children}
-                <Footer></Footer>
-            </QueryProvider>
-        </StoreProvider>
-        </body>
+        <html lang="en" suppressHydrationWarning>
+            <body>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                >
+                    <StoreProvider>
+                        <QueryProvider>
+                            <NextTopLoader
+                                showSpinner={false}
+                                height={2}
+                                shadow={false}
+                                color="red"
+                            />
+                            <Navbar />
+                            <Toaster position={"bottom-left"} />
+                            {children}
+                            <Footer></Footer>
+                        </QueryProvider>
+                    </StoreProvider>
+                </ThemeProvider>
+            </body>
         </html>
     );
 }

@@ -42,7 +42,7 @@ const ProductDetails = ({ product }: { product: Product }) => {
                             {formatText(product?.category)}
                         </p>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground text-pretty">
                         {product.description}
                     </p>
 
@@ -96,7 +96,7 @@ const ProductDetails = ({ product }: { product: Product }) => {
                         </p>
                     </div>
 
-                    <div className="flex justify-center sm:justify-between items-center fixed bottom-0 left-0 w-full px-8 py-4 bg-white border-t sm:relative sm:bottom-auto sm:left-auto sm:px-0 sm:py-0 sm:border-none">
+                    <div className="flex justify-center sm:justify-between items-center fixed bottom-0 left-0 w-full px-8 py-4 border-t sm:relative sm:bottom-auto sm:left-auto sm:px-0 sm:py-0 sm:border-none bg-background/70 backdrop-blur-md">
                         <p className="text-2xl font-bold hidden sm:block">
                             ${product.price}
                         </p>

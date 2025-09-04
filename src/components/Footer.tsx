@@ -3,11 +3,11 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-white border-t">
+    <footer className="border-t">
       <div className="mx-auto max-w-screen-xl space-y-8 px-4 pb-8 pt-12 sm:px-6 lg:space-y-16 lg:px-8">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div>
-            <div className="text-neutral-800">
+            <div>
               <h1 className="text-2xl tracking-tighter font-bold">Clozit</h1>
             </div>
             <ul className="mt-8 flex gap-2">
@@ -82,7 +82,7 @@ const Footer = () => {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-4">
             <div>
-              <p className="font-semibold text-gray-900">Products</p>
+              <p className="font-semibold">Products</p>
 
               <ul className="mt-6 space-y-2 text-sm">
                 <li>
@@ -123,7 +123,7 @@ const Footer = () => {
               </ul>
             </div>
             <div>
-              <p className="font-semibold text-gray-900">Helpful Links</p>
+              <p className="font-semibold">Helpful Links</p>
 
               <ul className="mt-6 space-y-2 text-sm">
                 <li>

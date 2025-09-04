@@ -46,7 +46,7 @@ const CheckoutSkeleton = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Checkout Form Skeleton */}
                         <div className="lg:col-span-2 space-y-6">
-                            <Card className="shadow-sm border-0 bg-white/70 backdrop-blur-sm">
+                            <Card className="shadow-sm border-0 backdrop-blur-sm">
                                 <CardHeader className="pb-4">
                                     <div className="flex items-center gap-2">
                                         <Skeleton className="h-5 w-5" />
@@ -92,7 +92,7 @@ const CheckoutSkeleton = () => {
 
                         {/* Order Summary Skeleton */}
                         <div className="lg:col-span-1">
-                            <Card className="shadow-lg border-0 bg-white/70 backdrop-blur-sm sticky top-6">
+                            <Card className="shadow-lg border-0 backdrop-blur-sm sticky top-6">
                                 <CardHeader className="pb-4">
                                     <div className="flex items-center gap-2">
                                         <Skeleton className="h-5 w-5" />
@@ -250,7 +250,7 @@ const Checkout = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Checkout Form */}
                         <div className="lg:col-span-2 space-y-6">
-                            <Card className="shadow-sm border-0 bg-white/70 backdrop-blur-sm">
+                            <Card className="shadow-sm border-0 backdrop-blur-sm">
                                 <CardHeader className="pb-4">
                                     <CardTitle className="flex items-center gap-2 text-xl">
                                         <MapPin className="h-5 w-5 text-primary" />
@@ -495,7 +495,7 @@ const Checkout = () => {
 
                         {/* Order Summary */}
                         <div className="lg:col-span-1">
-                            <Card className="shadow-lg border-0 bg-white/70 backdrop-blur-sm sticky top-6">
+                            <Card className="shadow-lg border-0 backdrop-blur-sm sticky top-6">
                                 <CardHeader className="pb-4">
                                     <CardTitle className="flex items-center gap-2 text-xl">
                                         <Package className="h-5 w-5 text-primary" />

@@ -40,7 +40,7 @@ const Navbar = async () => {
     });
     return (
         <header className="sticky top-0 z-50">
-            <nav className="flex justify-between items-center px-6 sm:px-10 py-2 sm:py-3 border-b w-full bg-white/80 backdrop-blur-lg">
+            <nav className="flex justify-between items-center px-6 sm:px-10 py-2 sm:py-3 border-b w-full bg-background/75 backdrop-blur-lg">
                 <div className="logo flex items-center gap-2">
                     <Link
                         href={"/"}
@@ -126,7 +126,7 @@ const Navbar = async () => {
                                         Clozit
                                     </SheetTitle>
                                 </SheetHeader>
-                                <ul className="flex flex-col my-4 gap-2 text-slate-900 font-medium text-base px-4">
+                                <ul className="flex flex-col my-4 gap-2 text-muted-foreground font-medium text-base px-4">
                                     <li className="hover:text-primary duration-50 transition-colors">
                                         <Link href="/t-shirts">T-Shirts</Link>
                                     </li>

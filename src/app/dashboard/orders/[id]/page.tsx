@@ -1,24 +1,23 @@
 "use client";
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useQuery } from "@tanstack/react-query";
 import {
-    Package,
-    User,
-    MapPin,
-    CreditCard,
-    Phone,
-    Truck,
+    AlertCircle,
     CheckCircle,
     Clock,
-    AlertCircle,
+    CreditCard,
     Loader2,
+    MapPin,
+    Package,
+    Phone,
     RefreshCw,
+    Truck,
+    User,
 } from "lucide-react";
 import { useParams } from "next/navigation";
 
@@ -207,7 +206,7 @@ const ViewOrder = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="text-3xl font-bold ">
                         Order #{order.id.slice(-8)}
                     </h1>
                     <p className="text-sm text-gray-500 mt-1">
@@ -215,9 +214,7 @@ const ViewOrder = () => {
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    {isFetching && (
-                        <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
-                    )}
+                    {isFetching && <Loader2 className="h-4 w-4 animate-spin" />}
                     <Badge
                         className={`${getStatusColor(order.status)} px-3 py-1`}
                     >
@@ -248,7 +245,7 @@ const ViewOrder = () => {
                                             key={index}
                                             className="flex items-center space-x-4 p-4 border rounded-lg"
                                         >
-                                            <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                            <div className="w-16 h-16 rounded-lg flex items-center justify-center">
                                                 {order.products[product]
                                                     .image ? (
                                                     <img
@@ -265,17 +262,17 @@ const ViewOrder = () => {
                                                         className="w-full h-full object-cover rounded-lg"
                                                     />
                                                 ) : (
-                                                    <Package className="h-8 w-8 text-gray-400" />
+                                                    <Package className="h-8 w-8" />
                                                 )}
                                             </div>
                                             <div className="flex-1">
-                                                <h3 className="font-medium text-gray-900">
+                                                <h3 className="font-medium">
                                                     {
                                                         order.products[product]
                                                             .productName
                                                     }
                                                 </h3>
-                                                <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+                                                <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
                                                     <span>
                                                         Qty:{" "}
                                                         {order.products[product]
@@ -306,7 +303,7 @@ const ViewOrder = () => {
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="font-medium text-gray-900">
+                                                <p className="font-medium">
                                                     {formatCurrency(
                                                         order.products[product]
                                                             .price *
@@ -315,7 +312,7 @@ const ViewOrder = () => {
                                                             ].qty || 1)
                                                     )}
                                                 </p>
-                                                <p className="text-sm text-gray-500">
+                                                <p className="text-sm ">
                                                     {formatCurrency(
                                                         order.products[product]
                                                             .price
@@ -362,7 +359,7 @@ const ViewOrder = () => {
                                 </Badge>
                             </div>
 
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-muted-foreground">
                                 <p>
                                     Expected delivery: {order.daysToDeliver}{" "}
                                     days
@@ -384,14 +381,10 @@ const ViewOrder = () => {
                         </CardHeader>
                         <CardContent className="space-y-3">
                             <div>
-                                <p className="font-medium text-gray-900">
-                                    {order.fullname}
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                    {order.user?.email}
-                                </p>
+                                <p className="font-medium">{order.fullname}</p>
+                                <p className="text-sm ">{order.user?.email}</p>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <div className="flex items-center gap-2 text-sm ">
                                 <Phone className="h-4 w-4" />
                                 <span>{order.phone}</span>
                             </div>
@@ -427,17 +420,13 @@ const ViewOrder = () => {
                         </CardHeader>
                         <CardContent className="space-y-3">
                             <div>
-                                <p className="text-sm text-gray-600">
-                                    Payment ID
-                                </p>
+                                <p className="text-sm ">Payment ID</p>
                                 <p className="font-mono text-sm break-all">
                                     {order.stripePaymentId}
                                 </p>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">
-                                    Amount Paid
-                                </p>
+                                <p className="text-sm ">Amount Paid</p>
                                 <p className="font-semibold text-lg">
                                     {formatCurrency(order.amount)}
                                 </p>
