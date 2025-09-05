@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { ModeToggle } from "./theme-toggle";
 
 const Footer = () => {
   return (
@@ -7,8 +8,9 @@ const Footer = () => {
       <div className="mx-auto max-w-screen-xl space-y-8 px-4 pb-8 pt-12 sm:px-6 lg:space-y-16 lg:px-8">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div>
-            <div>
+            <div className="flex items-center gap-4">
               <h1 className="text-2xl tracking-tighter font-bold">Clozit</h1>
+              <ModeToggle />
             </div>
             <ul className="mt-8 flex gap-2">
               <li>

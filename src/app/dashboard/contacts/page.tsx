@@ -1,6 +1,7 @@
 "use client";
+import React from "react";
 import { Contact } from "@/client/prisma";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
     Table,
@@ -11,8 +12,69 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+    DialogClose,
+    DialogDescription,
+} from "@/components/ui/dialog";
+
+// DeleteContactDialog component
+function DeleteContactDialog({ contactId }: { contactId: string }) {
+    const [open, setOpen] = React.useState(false);
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: async () => {
+            const res = await fetch("/api/dashboard/v1/contact/delete", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    id: contactId,
+                },
+            });
+            if (!res.ok) throw new Error("Failed to delete contact");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: ["contacts"] });
+            setOpen(false);
+        },
+    });
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="destructive">Delete</Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Delete Contact</DialogTitle>
+                    <DialogDescription>
+                        Are you sure you want to delete this contact? This
+                        action cannot be undone.
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <Button
+                        variant="destructive"
+                        onClick={() => mutation.mutate()}
+                        disabled={mutation.isPending}
+                    >
+                        {mutation.isPending ? "Deleting..." : "Yes, Delete"}
+                    </Button>
+                    <DialogClose asChild>
+                        <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 const products = () => {
     const query = useQuery({
@@ -95,30 +157,33 @@ const products = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {query.data?.data.map((contact: Contact) => (
-                        <TableRow key={contact.id}>
-                            <TableCell className="font-medium">
-                                {contact.id}
-                            </TableCell>
-                            <TableCell>{contact.name}</TableCell>
-                            <TableCell>{contact.email}</TableCell>
-                            <TableCell>{contact.phone}</TableCell>
-                            <TableCell>
-                                {contact.message.substring(0, 50)}...
-                            </TableCell>
-                            <TableCell className="flex gap-2">
-                                <Link
-                                    href={`/dashboard/contacts/${contact.id}`}
-                                    className={buttonVariants({
-                                        variant: "default",
-                                    })}
-                                >
-                                    View Contact
-                                </Link>
-                                <Button variant="destructive">Delete</Button>
+                    {query.data?.data.length === 0 && (
+                        <TableRow>
+                            <TableCell colSpan={6} className="text-center">
+                                No contacts found.
                             </TableCell>
                         </TableRow>
-                    ))}
+                    )}
+
+                    {query.data?.data.lentgth > 0 &&
+                        query.data?.data.map((contact: Contact) => (
+                            <TableRow key={contact.id}>
+                                <TableCell className="font-medium">
+                                    {contact.id}
+                                </TableCell>
+                                <TableCell>{contact.name}</TableCell>
+                                <TableCell>{contact.email}</TableCell>
+                                <TableCell>{contact.phone}</TableCell>
+                                <TableCell className="w-2/3">
+                                    {contact.message}
+                                </TableCell>
+                                <TableCell className="flex gap-2">
+                                    <DeleteContactDialog
+                                        contactId={contact.id}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        ))}
                 </TableBody>
             </Table>
         </div>

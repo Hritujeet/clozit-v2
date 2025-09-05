@@ -1,5 +1,24 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import { Order } from "@/client/prisma";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
     Table,
     TableBody,
@@ -9,12 +28,103 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import React from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Order, Product } from "@/client/prisma";
-import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+
+// OrderStatusDialog component and helpers moved above main component for correct reference
+const statusOptions = [
+    "PENDING",
+    "ORDERED",
+    "SHIPPING",
+    "OUT_FOR_DELIVERY",
+    "DELIVERED",
+];
+
+function getNextStatuses(current: string) {
+    const idx = statusOptions.indexOf(current);
+    if (idx === -1) return [];
+    // Only allow moving forward in status
+    return statusOptions.slice(idx + 1);
+}
+
+function OrderStatusDialog({ order }: { order: Order }) {
+    const [open, setOpen] = useState(false);
+    const [selected, setSelected] = useState("");
+    const [error, setError] = useState("");
+    const queryClient = useQueryClient();
+    const nextStatuses = getNextStatuses(order.status);
+
+    const mutation = useMutation({
+        mutationFn: async (status: string) => {
+            const res = await fetch("/api/dashboard/v1/orders/update-status", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    id: order.id,
+                },
+                body: JSON.stringify({ status }),
+            });
+            if (!res.ok) throw new Error("Failed to update status");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["orders"] });
+            queryClient.refetchQueries({ queryKey: ["orders", order.id] });
+            setOpen(false);
+        },
+        onError: (err: any) => {
+            setError(err.message || "Error");
+        },
+    });
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="default">Update Status</Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Update Order Status</DialogTitle>
+                    <DialogDescription>
+                        Current status: <b>{order.status}</b>
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="my-4">
+                    <label htmlFor="status-select" className="block mb-2">
+                        Select new status
+                    </label>
+                    <Select value={selected} onValueChange={setSelected}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="-- Select --" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {nextStatuses.map((s) => (
+                                <SelectItem key={s} value={s}>
+                                    {s.replace(/_/g, " ")}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                {error && (
+                    <div className="text-red-600 text-sm mb-2">{error}</div>
+                )}
+                <DialogFooter>
+                    <Button
+                        onClick={() => mutation.mutate(selected)}
+                        disabled={!selected || mutation.isPending}
+                    >
+                        {mutation.isPending ? "Updating..." : "Update"}
+                    </Button>
+                    <DialogClose asChild>
+                        <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 const products = () => {
     const query = useQuery({
@@ -117,6 +227,7 @@ const products = () => {
                         <TableHead>City</TableHead>
                         <TableHead>State</TableHead>
                         <TableHead>Status</TableHead>
+                        <TableHead>Created At</TableHead>
                         <TableHead className="text-right">Amount</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -132,12 +243,22 @@ const products = () => {
                             <TableCell>{order.city}</TableCell>
                             <TableCell>{order.state}</TableCell>
                             <TableCell>{order.status}</TableCell>
+                            <TableCell>
+                                {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "-"}
+                            </TableCell>
                             <TableCell className="text-right">
                                 ${order.amount}
                             </TableCell>
                             <TableCell className="flex gap-2">
-                                <Link href={`/dashboard/orders/${order.id}`} className={buttonVariants({variant: "outline"})}>View Details</Link>
-                                <Button>Update Status</Button>
+                                <Link
+                                    href={`/dashboard/orders/${order.id}`}
+                                    className={buttonVariants({
+                                        variant: "outline",
+                                    })}
+                                >
+                                    View Details
+                                </Link>
+                                <OrderStatusDialog order={order} />
                             </TableCell>
                         </TableRow>
                     ))}
