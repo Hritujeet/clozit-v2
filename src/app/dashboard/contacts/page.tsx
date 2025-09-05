@@ -165,7 +165,7 @@ const products = () => {
                         </TableRow>
                     )}
 
-                    {query.data?.data.lentgth > 0 &&
+                    {query.data?.data.length > 0 &&
                         query.data?.data.map((contact: Contact) => (
                             <TableRow key={contact.id}>
                                 <TableCell className="font-medium">
