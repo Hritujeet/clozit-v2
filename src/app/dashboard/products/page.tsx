@@ -1,5 +1,7 @@
 "use client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Product } from "@/client/prisma";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
     Table,
     TableBody,
@@ -9,13 +11,20 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import React, { use } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Product } from "@/client/prisma";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog";
 
 const products = () => {
     const queryClient = useQueryClient();
@@ -134,16 +143,39 @@ const products = () => {
                                 >
                                     View Product
                                 </Link>
-                                <Button
-                                    variant="destructive"
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                        deleteMutation.mutate(product.id);
-                                    }}
-                                    disabled={deleteMutation.isPending}
-                                >
-                                    Delete
-                                </Button>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            variant="destructive"
+                                            className="cursor-pointer"
+                                            disabled={deleteMutation.isPending}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Delete Product</DialogTitle>
+                                            <DialogDescription>
+                                                Are you sure you want to delete <b>{product.title}</b>? This action cannot be undone.
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <DialogFooter>
+                                            <Button
+                                                variant="destructive"
+                                                onClick={() => {
+                                                    deleteMutation.mutate(product.id);
+                                                }}
+                                                disabled={deleteMutation.isPending}
+                                            >
+                                                {deleteMutation.isPending ? "Deleting..." : "Delete"}
+                                            </Button>
+                                            <DialogClose asChild>
+                                                <Button variant="outline">Cancel</Button>
+                                            </DialogClose>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
                             </TableCell>
                         </TableRow>
                     ))}
