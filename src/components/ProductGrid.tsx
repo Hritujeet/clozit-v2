@@ -28,11 +28,7 @@ const ProductGrid = async ({
 
     const rawProducts = await db.product.findMany({
         orderBy: { updatedAt: "desc" },
-<<<<<<< HEAD
         where: whereClause,
-=======
-        where: whereClause
->>>>>>> f10ac49156be2f786658edb8d30f330332732511
     });
 
     if (!rawProducts) {
